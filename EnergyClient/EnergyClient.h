@@ -1,0 +1,26 @@
+#pragma once
+#ifndef ENERGY_CLIENT_H
+#define ENERGY_CLIENT_H
+
+#include "../TcpClient/TcpClient.h"
+#include <string>
+#include <chrono>
+
+class EnergyClient {
+private:
+	TcpClient m_client;
+	std::string m_buildingId;
+	std::string m_gatewayId;
+
+	std::chrono::steady_clock::time_point m_lastHeartbeatTime;
+	std::chrono::steady_clock::time_point m_lastDataTime;
+
+	std::string getCurrentTimeStr();
+	bool executeAuth();
+
+public:
+	EnergyClient(std::string buildingId, std::string gatewayId);
+	bool run(const std::string& ip, int port);
+};
+
+#endif // ENERGY_CLIENT_H
