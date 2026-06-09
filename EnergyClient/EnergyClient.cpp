@@ -84,7 +84,7 @@ bool EnergyClient::run(const std::string& ip, int port) {
 				// 接收响应检查
 				Packet ack;
 				if (m_client.receivePacket(ack)) {
-					std::cout << "[Heartbeat] 平台校时响应正常." << std::endl;
+					std::cout << "[Heartbeat] 平台校验响应正常." << std::endl;
 				}
 			}
 			m_lastHeartbeatTime = now;

@@ -39,7 +39,7 @@ struct Packet {
 		netHeader.type = header.type;
 		netHeader.length = htonl(static_cast<uint32_t>(data.size())); // 
 
-		std::memcpy(buffer.data(), &netHeader, sizeof(ProtocolHeader));
+		std::memcpy(buffer.data(), &netHeader, sizeof(ProtocolHeader));//ÄÚ´æ¿½±´ std::memcpy(target_addr,src_addr,sizeof(src_addr))
 		if (!data.empty()) {
 			std::memcpy(buffer.data() + sizeof(ProtocolHeader), data.data(), data.size());
 		}
