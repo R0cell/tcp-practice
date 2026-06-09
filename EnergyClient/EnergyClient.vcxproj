@@ -123,7 +123,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AuthManager.cpp" />
     <ClCompile Include="EnergyClient.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Md5Util.cpp" />
@@ -133,7 +132,6 @@
     <ClCompile Include="XmlParser.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AuthManager.h" />
     <ClInclude Include="EnergyClient.h" />
     <ClInclude Include="Md5Util.h" />
     <ClInclude Include="Packet.h" />

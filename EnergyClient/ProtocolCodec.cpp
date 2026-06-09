@@ -1,85 +1,55 @@
 #include "ProtocolCodec.h"
-
+#include <cstring>
+#if defined(_WIN32)
+#include <winsock2.h>
+#else
 #include <arpa/inet.h>
+#endif
 
-std::vector<uint8_t>
-ProtocolCodec::encode(
-	uint8_t type,
-	const std::string& xml)
-{
-	std::vector<uint8_t> packet;
+std::vector<uint8_t> ProtocolCodec::encode(const Packet& packet) {
+	std::vector<uint8_t> bytes(sizeof(ProtocolHeader) + packet.data.size());
 
-	uint16_t head = htons(0xCFCF);
+	ProtocolHeader header;
+	header.head = htons(PROTOCOL_HEAD); // 转换为网络字节序 
+	header.type = packet.type;
+	header.length = htonl(static_cast<uint32_t>(packet.data.size())); // 转换为网络字节序 
 
-	uint32_t len =
-		htonl(
-			static_cast<uint32_t>(
-				xml.size()));
-
-	packet.insert(
-		packet.end(),
-		reinterpret_cast<uint8_t*>(&head),
-		reinterpret_cast<uint8_t*>(&head) + 2);
-
-	packet.push_back(type);
-
-	packet.insert(
-		packet.end(),
-		reinterpret_cast<uint8_t*>(&len),
-		reinterpret_cast<uint8_t*>(&len) + 4);
-
-	packet.insert(
-		packet.end(),
-		xml.begin(),
-		xml.end());
-
-	return packet;
+	std::memcpy(bytes.data(), &header, sizeof(ProtocolHeader));
+	if (!packet.data.empty()) {
+		std::memcpy(bytes.data() + sizeof(ProtocolHeader), packet.data.data(), packet.data.size());
+	}
+	return bytes;
 }
 
-//拆包器
-bool ProtocolCodec::decode(
-	std::vector<uint8_t>& buffer,
-	Packet& packet)
-{
-	if (buffer.size() < 7)
-		return false;
-
-	uint16_t head;
-
-	memcpy(
-		&head,
-		buffer.data(),
-		2);
-
-	head = ntohs(head);
-
-	if (head != 0xCFCF)
-	{
-		buffer.clear();
+bool ProtocolCodec::decode(std::vector<uint8_t>& buffer, Packet& outPacket) {
+	// 长度不足一个包头，继续等待 
+	if (buffer.size() < sizeof(ProtocolHeader)) {
 		return false;
 	}
 
-	packet.type = buffer[2];
+	// 预读取包头，不移动游标 
+	ProtocolHeader header;
+	std::memcpy(&header, buffer.data(), sizeof(ProtocolHeader));
 
-	uint32_t len;
+	uint16_t head = ntohs(header.head);
+	uint32_t length = ntohl(header.length); // 
 
-	memcpy(
-		&len,
-		buffer.data() + 3,
-		4);
-
-	len = ntohl(len);
-
-	if (buffer.size() < len + 7)
+	if (head != PROTOCOL_HEAD) {
+		// 发现非法协议头，说明流已经错乱，清空丢弃防死锁（高异常处理规范） [cite: 107]
+		buffer.erase(buffer.begin(), buffer.begin() + 1);
 		return false;
+	}
 
-	packet.xml.assign(
-		buffer.begin() + 7,
-		buffer.begin() + 7 + len);
+	// 判断当前缓冲区里的数据是否满足包头指明的完整大小 [cite: 8, 15]
+	if (buffer.size() < sizeof(ProtocolHeader) + length) {
+		return false; // 半包情况，等待下次物理接收
+	}
 
-	buffer.erase(
-		buffer.begin(),
-		buffer.begin() + 7 + len);
+	// 提取完整数据包 
+	outPacket.type = header.type;
+	outPacket.data.assign(reinterpret_cast<char*>(buffer.data() + sizeof(ProtocolHeader)), length);
 
+	// 从缓冲区移除已消费的字节流（解决粘包核心）
+	buffer.erase(buffer.begin(), buffer.begin() + sizeof(ProtocolHeader) + length);
 	return true;
 }

@@ -43,12 +43,6 @@
     <Filter Include="源文件\Utils">
       <UniqueIdentifier>{158104ce-901e-4c75-a8ec-f54cf705b92d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="头文件\Auth">
-      <UniqueIdentifier>{a5d8872a-b791-4887-9873-1a6f14836b2d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Auth">
-      <UniqueIdentifier>{07acc939-6475-4cc9-9bb8-20bf1f232b26}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -68,9 +62,6 @@
     </ClCompile>
     <ClCompile Include="Md5Util.cpp">
       <Filter>源文件\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="AuthManager.cpp">
-      <Filter>源文件\Auth</Filter>
     </ClCompile>
     <ClCompile Include="ProtocolCodec.cpp">
       <Filter>源文件\Protocol</Filter>
@@ -94,9 +85,6 @@
     </ClInclude>
     <ClInclude Include="Md5Util.h">
       <Filter>头文件\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="AuthManager.h">
-      <Filter>头文件\Auth</Filter>
     </ClInclude>
     <ClInclude Include="ProtocolCodec.h">
       <Filter>头文件\Protocol</Filter>

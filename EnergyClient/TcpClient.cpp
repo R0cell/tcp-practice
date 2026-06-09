@@ -1,8 +1,7 @@
 #include "TcpClient.h"
-#include <iostream>
-
 #if defined(_WIN32)
 #include <winsock2.h>
+#include <ws2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")
 #else
 #include <unistd.h>
@@ -55,41 +54,23 @@ void TcpClient::disconnect() {
 	m_connected = false;
 }
 
-bool TcpClient::sendPacket(const Packet& packet) {
+bool TcpClient::sendRaw(const std::vector<uint8_t>& data) {
 	if (!m_connected) return false;
-	auto buffer = packet.serialize();
-	int bytesSent = send(m_socket, reinterpret_cast<const char*>(buffer.data()), buffer.size(), 0);
-	return bytesSent == static_cast<int>(buffer.size());
+	int ret = send(m_socket, reinterpret_cast<const char*>(data.data()), data.size(), 0);
+	return ret == static_cast<int>(data.size());
 }
 
-bool TcpClient::receivePacket(Packet& outPacket) {
+bool TcpClient::readToBuffer() {
 	if (!m_connected) return false;
 
-	// 1. 准确接收 Fixed Header
-	ProtocolHeader header;
-	int bytesRead = recv(m_socket, reinterpret_cast<char*>(&header), sizeof(ProtocolHeader), 0);
-	if (bytesRead <= 0) return false;
-
-	// 解析 Header 并转换字节序
-	outPacket.header.head = ntohs(header.head);
-	outPacket.header.type = header.type;
-	outPacket.header.length = ntohl(header.length); // 
-
-	if (outPacket.header.head != PROTOCOL_HEAD) {
-		std::cerr << "协议头非法校验失败." << std::endl;
-		return false;
+	char tempBuf[4096];
+	int n = recv(m_socket, tempBuf, sizeof(tempBuf), 0);
+	if (n > 0) {
+		m_readBuffer.insert(m_readBuffer.end(), tempBuf, tempBuf + n);
+		return true;
 	}
-
-	// 2. 根据明确的变长长度接收应用层 XML [cite: 15, 16]
-	if (outPacket.header.length > 0) {
-		std::vector<char> dataBuffer(outPacket.header.length);
-		uint32_t totalReceived = 0;
-		while (totalReceived < outPacket.header.length) {
-			int n = recv(m_socket, dataBuffer.data() + totalReceived, outPacket.header.length - totalReceived, 0);
-			if (n <= 0) return false;
-			totalReceived += n;
-		}
-		outPacket.data.assign(dataBuffer.begin(), dataBuffer.end()); // [cite: 16]
+	else if (n == 0) {
+		m_connected = false; // 对方断开
 	}
-	return true;
+	return false;
 }
