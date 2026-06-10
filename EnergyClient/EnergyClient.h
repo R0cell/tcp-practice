@@ -1,16 +1,16 @@
 #ifndef ENERGY_CLIENT_H
 #define ENERGY_CLIENT_H
 
-#include "../TcpClient/TcpClient.h"
-#include "../Protocol/Packet.h"
+#include "TcpClient.h"
+#include "Packet.h"
 #include <string>
 #include <chrono>
 
 class EnergyClient {
 private:
 	TcpClient m_netPipe; // 持有底层网络管道
-	std::string m_buildingId;
-	std::string m_gatewayId;
+	std::string m_buildingId = "XH310104BG0321";
+	std::string m_gatewayId = "1";
 
 	std::chrono::steady_clock::time_point m_lastHeartbeatTime;
 	std::chrono::steady_clock::time_point m_lastDataTime;

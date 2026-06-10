@@ -13,81 +13,51 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="源文件\Protocol">
-      <UniqueIdentifier>{d5dc60d6-d6a9-46d7-8952-7fa76064933e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="头文件\Protocol">
-      <UniqueIdentifier>{1006eaa6-9900-4e3e-b467-b6de3c92a23a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="头文件\XML">
-      <UniqueIdentifier>{e1f2dff9-cd45-4cbb-9e9a-3fdfea4bb0ff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\XML">
-      <UniqueIdentifier>{9163e126-09c7-4633-a1f7-468620dc657e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\TcpClient">
-      <UniqueIdentifier>{9baab073-66d2-4691-bdb0-944d72b41711}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="头文件\TcpClient">
-      <UniqueIdentifier>{2d2ac29f-8d2f-4a8d-882a-94d2c3f5b3d8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\EnergyClient">
-      <UniqueIdentifier>{c16e5530-3d55-44f0-ad34-a7f75d2160bb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="头文件\EnergyClient">
-      <UniqueIdentifier>{1bb4576d-3309-431a-8b7c-bca855be6de8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="头文件\Utils">
-      <UniqueIdentifier>{ca6f8af0-5020-4fda-a40c-662d8ee6bdac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Utils">
-      <UniqueIdentifier>{158104ce-901e-4c75-a8ec-f54cf705b92d}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="XmlBuilder.cpp">
-      <Filter>源文件\XML</Filter>
-    </ClCompile>
-    <ClCompile Include="XmlParser.cpp">
-      <Filter>源文件\XML</Filter>
-    </ClCompile>
-    <ClCompile Include="TcpClient.cpp">
-      <Filter>源文件\TcpClient</Filter>
+    <ClCompile Include="ProtocolCodec.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="EnergyClient.cpp">
-      <Filter>源文件\EnergyClient</Filter>
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpClient.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="XmlBuilder.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="XmlParser.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Md5Util.cpp">
-      <Filter>源文件\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="ProtocolCodec.cpp">
-      <Filter>源文件\Protocol</Filter>
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Packet.h">
-      <Filter>头文件\Protocol</Filter>
+    <ClInclude Include="XmlParser.h">
+      <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="XmlBuilder.h">
-      <Filter>头文件\XML</Filter>
-    </ClInclude>
-    <ClInclude Include="XmlParser.h">
-      <Filter>头文件\XML</Filter>
-    </ClInclude>
-    <ClInclude Include="TcpClient.h">
-      <Filter>头文件\TcpClient</Filter>
-    </ClInclude>
-    <ClInclude Include="EnergyClient.h">
-      <Filter>头文件\EnergyClient</Filter>
+      <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Md5Util.h">
-      <Filter>头文件\Utils</Filter>
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TcpClient.h">
+      <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ProtocolCodec.h">
-      <Filter>头文件\Protocol</Filter>
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Packet.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EnergyClient.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

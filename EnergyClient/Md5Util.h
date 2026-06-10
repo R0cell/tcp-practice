@@ -1,15 +1,3 @@
-#pragma once
-
-#include <string>
-
-class Md5Util
-{
-public:
-
-	static std::string md5(
-		const std::string& text);
-};
-
 #ifndef MD5_UTIL_H
 #define MD5_UTIL_H
 

@@ -1,12 +1,16 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <ctime> 
 #include "EnergyClient.h"
-#include "../Protocol/ProtocolCodec.h"
-#include "../XML/XmlBuilder.h"
-#include "../XML/XmlParser.h"
-#include "../Utils/Md5Util.h"
+#include "ProtocolCodec.h"
+#include "XmlBuilder.h"
+#include "XmlParser.h"
+#include "Md5Util.h"
 #include <iostream>
 #include <thread>
 #include <sstream>
 #include <iomanip>
+#include <string>
 
 EnergyClient::EnergyClient(std::string buildingId, std::string gatewayId)
 	: m_buildingId(std::move(buildingId)), m_gatewayId(std::move(gatewayId)) {}
@@ -44,12 +48,13 @@ bool EnergyClient::executeAuth() {
 		// (1) 发送身份认证请求 [cite: 19]
 		// 业务层只负责把XML内容和塞进包裹
 		Packet reqPack{ TYPE_AUTH, XmlBuilder::buildAuthRequest(m_buildingId, m_gatewayId) };
-		if (!m_netPipe.sendRaw(ProtocolCodec::encode(reqPack))) return false; [cite:15]
+
+		if (!m_netPipe.sendRaw(ProtocolCodec::encode(reqPack))) return false;
 
 		// (2) 接收挑战序列 [cite: 20]
 		Packet resPack;
 		if (!waitForPacket(resPack)) return false;
-		std::string sequence = XmlParser::extractTagValue(resPack.data, "sequence"); [cite:44]
+		std::string sequence = XmlParser::extractTagValue(resPack.data, "sequence"); //[cite:44]
 
 		// (3) 计算 MD5 并送回平台 [cite: 21]
 		std::string md5Val = Md5Util::compute(sequence);
@@ -72,7 +77,7 @@ bool EnergyClient::run(const std::string& ip, int port) {
 	if (!m_netPipe.connectToServer(ip, port)) return false;
 
 	std::cout << "[Client] 网络通道已联通，启动安全规约认证流程..." << std::endl; //[cite:19]
-	if (!executeAuthWorkflow()) {
+	if (!executeAuth()) {
 		std::cerr << "[Client] 规约安全认证未通过，断开连接." << std::endl; //[cite:22]
 		m_netPipe.disconnect();
 		return false;
